@@ -21,7 +21,8 @@ class Leaderboard
 
 		date_since = opts.since || 3.months.ago.to_datetime
 		date_until = opts.date_until || Time.now.to_datetime
-		date_interval = opts.date_interval || 30.days
+		date_interval = opts.date_interval || ENV['SINCE'].to_datetime 
+		#date_interval = ENV['SINCE'] || 30.days
 		date_since = Time.at(date_until.to_i - date_interval*2)
 		
 		events = GithubDashing::EventCollection.new(

@@ -21,10 +21,14 @@ class GithubBackend
 		opts = OpenStruct.new(opts) unless opts.kind_of? OpenStruct
 		events = GithubDashing::EventCollection.new
 		self.get_repos(opts).each do |repo|
+		next if repo=='kaltura/CommunityBlog' || repo=='kaltura/flash-ps' || repo=='kaltura/editingapp' || repo=='kaltura/kdp-wrapper' ||repo =='kaltura/kdp-skin'
 			# Can't limit timeframe
 			begin
 				stats = request('contributors_stats', [repo]) || []
 				stats.each do |stat|
+			
+	
+
 					stat.weeks.each do |week|
 						events << GithubDashing::Event.new({
 							type: "commits_additions",
@@ -59,6 +63,7 @@ class GithubBackend
 		opts = OpenStruct.new(opts) unless opts.kind_of? OpenStruct
 		events = GithubDashing::EventCollection.new
 		self.get_repos(opts).each do |repo|
+			#next if is_from_org('kaltura',issue.author.login) === true
 			begin
 				request('issues_comments', [repo, {:since => opts.since}]).each do |issue|
 					next if not issue.user
@@ -82,6 +87,7 @@ class GithubBackend
 		events = GithubDashing::EventCollection.new
 		self.get_repos(opts).each do |repo|
 			['open','closed'].each do |state|
+			#next if is_from_org('kaltura',pull.user.login) === true
 				begin
 					request('pulls', [repo, {:state => state, :since => opts.since}]).each do |pull|
 						state_desc = (state == 'open') ? 'opened' : 'closed'
@@ -106,6 +112,7 @@ class GithubBackend
 		opts = OpenStruct.new(opts) unless opts.kind_of? OpenStruct
 		events = GithubDashing::EventCollection.new
 		self.get_repos(opts).each do |repo|
+			#next if is_from_org('kaltura',comment.user.login) === true
 			begin
 				request('pulls_comments', [repo, {:since => opts.since}]).each do |comment|
 					next if not comment.user
@@ -129,6 +136,7 @@ class GithubBackend
 		events = GithubDashing::EventCollection.new
 		self.get_repos(opts).each do |repo|
 			['open','closed'].each do |state|
+			#next if is_from_org('kaltura',issue.user.login) === true
 				begin
 					issues = request('issues', [repo, {:since => opts.since,:state => state}])
 					state_desc = (state == 'open') ? 'opened' : 'closed'
@@ -169,6 +177,8 @@ class GithubBackend
 					
 					state_desc = (state == 'open') ? 'opened' : 'closed'
 					issues.each do |issue|
+					next if is_from_org(ENV['SKIP_ORG_MEMBERS'],issue.user.login) === true
+					#print "ISSUE: " + issue.user.login + "\n";
 						events << GithubDashing::Event.new({
 							type: "issue_count_#{state_desc}",
 							datetime: issue.state == 'open' ? issue.created_at.to_datetime : issue.closed_at.to_datetime,
@@ -198,6 +208,7 @@ class GithubBackend
 					pulls.select! {|pull|pull.created_at.to_datetime > opts.since.to_datetime}
 					state_desc = (state == 'open') ? 'opened' : 'closed'
 					pulls.each do |pull|
+					next if is_from_org(ENV['SKIP_ORG_MEMBERS'],pull.user.login) === true
 						events << GithubDashing::Event.new({
 							type: "pull_count_#{state_desc}",
 							datetime: pull.created_at.to_datetime,
@@ -239,6 +250,17 @@ class GithubBackend
 		end
 
 		return repos
+	end
+	def is_from_org(org,user)
+		client = Octokit::Client.new(
+			:login => ENV['GITHUB_LOGIN'],
+			:access_token => ENV['GITHUB_OAUTH_TOKEN']
+		)
+		result = client.organization_member?(org, user)
+		client = nil
+		GC.start
+		Octokit.reset!
+		return result
 	end
 
 	# Use a new client for each request, to avoid excessive memory leaks

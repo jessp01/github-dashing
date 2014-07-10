@@ -1,6 +1,12 @@
+<script type='text/javascript'>
+$(function() {
+Dashing.gridsterLayout('[{"col":1,"row":1,"size_x":2,"size_y":4},{"col":3,"row":1,"size_x":2,"size_y":1},{"col":3,"row":2,"size_x":2,"size_y":1},{"col":5,"row":1,"size_x":2,"size_y":1}]')
+});
+</script>
+<title>Github Open Source Dashboard</title>
 <% content_for(:title) { "Github Open Source Dashboard" } %>
 <div class="gridster highcontrast">
-  <h1 class="header">SilverStripe Contributions Dashboard</h1>
+  <h1 class="header">Kaltura Projects Community Contributions Leaderboard</h1>
   <ul>
     <li data-row="1" data-col="1" data-sizex="2" data-sizey="4" 
       title="Aggregated weighted contributions: Commits, issues opened/closed, pull requests, comments. Commit counts are taken from default branch only.">
@@ -34,6 +40,18 @@
         class="widget-graph widget-graph-large-change-rate">
       </div>
     </li>
+    <!--li data-row="2" data-col="3" data-sizex="2" data-sizey="1">
+      <div 
+        data-id="jess_po" 
+        data-view="SeriesGraph" 
+        data-renderer="bar"
+        data-colors="#fff #888" 
+        data-title="CI checks" 
+        data-subtitle="CI checks" 
+        data-padding-top="0.35"
+        class="widget-graph widget-graph-large-change-rate">
+      </div>
+    </li-->
     <li data-row="3" data-col="3" data-sizex="2" data-sizey="1">
       <div 
         data-id="issues_closed" 
@@ -46,7 +64,7 @@
         class="widget-graph widget-graph-large-change-rate">
       </div>
     </li>
-     <li data-row="4" data-col="3" data-sizex="2" data-sizey="1">
+     <!--li data-row="4" data-col="3" data-sizex="2" data-sizey="1">
       <div 
         data-id="forum_unanswered" 
         data-view="SeriesGraph" 
@@ -64,7 +82,7 @@
         data-view="NestedList"
         data-title="Travis Build Status">
       </div>
-    </li>
+    </li-->
   </ul>
   <footer data-id="meta_stats" data-view="Meta"></footer>
 </div>
