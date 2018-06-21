@@ -1,14 +1,14 @@
 source 'https://rubygems.org'
 
 gem 'rake'
-gem 'dashing'
+gem 'dashing', '>= 1.3.4'
 gem 'json', '~> 1.7.7'
 gem 'dotenv'
 gem 'octokit'
 gem 'i18n'
 gem 'faraday', '~> 0.9'
 gem 'faraday-http-cache'
-gem 'activesupport'
+gem 'activesupport', '>= 3.2.22'
 gem 'rspec'
 gem 'rspec-mocks'
 gem "sentry-raven", :git => "https://github.com/getsentry/raven-ruby.git"
