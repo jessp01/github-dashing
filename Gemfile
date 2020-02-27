@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rake'
+gem 'rake', '>= 12.3.3'
 gem 'dashing'
 gem 'json', '~> 1.7.7'
 gem 'dotenv'
